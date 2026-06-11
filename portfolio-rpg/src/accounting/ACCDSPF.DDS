@@ -1,0 +1,191 @@
+     A* =================================================================
+     A* ファイル名：ACCDSPF
+     A* 機　　能：会計管理画面ファイル
+     A* 画面サイズ：24行 × 80桁
+     A* =================================================================
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      PRINT
+     A                                      CA03(03 'F3=終了')
+     A*
+     A* =================================================================
+     A* フォーマット：ACCMNU（会計メニュー画面）
+     A* =================================================================
+     A          R ACCMNU
+     A                                      CA06(06 'F6=売掛照会')
+     A                                      CA07(07 'F7=入金消込')
+     A                                      CA08(08 'F8=買掛照会')
+     A                                      CA09(09 'F9=支払処理')
+     A*
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 53'会計管理'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A                                      3  2'得意先/仕入先CD:'
+     A            SRCD          10A  B  3 19DSPATR(UL)
+     A                                      3 33'請求/仕入番号:'
+     A            SRNO          10A  B  3 48DSPATR(UL)
+     A                                      3 63'ｽﾃｰﾀｽ:'
+     A            SRSTS          1A  B  3 71
+     A*
+     A                                      5  2'【売掛金サマリー】'
+     A                                      DSPATR(HI)
+     A                                      6  2'請求総額:'
+     A            TOTINV        11P 2O  6 12EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      6 28'入金済額:'
+     A            TOTRCV        11P 2O  6 38EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      6 55'未収残高:'
+     A            TOTARBAL      11P 2O  6 65EDTCDE(1)
+     A                                      DSPATR(HI)
+     A*
+     A                                      9  2'【買掛金サマリー】'
+     A                                      DSPATR(HI)
+     A                                      10  2'仕入総額:'
+     A            TOTPO         11P 2O 10 12EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      10 28'支払済額:'
+     A            TOTPAY        11P 2O 10 38EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      10 55'未払残高:'
+     A            TOTAPBAL      11P 2O 10 65EDTCDE(1)
+     A                                      DSPATR(HI)
+     A*
+     A                                      23  2'F3=終了  F6=売掛照会  F7=入金消込  +
+     A                                         F8=買掛照会  F9=支払処理'
+     A                                      DSPATR(HI)
+     A            MSGACC        79A  O 24  2COLOR(RED)
+     A*
+     A* =================================================================
+     A* フォーマット：ARDET（売掛金明細・入金消込画面）
+     A* =================================================================
+     A          R ARDET
+     A                                      CF04(04 'F4=入金消込確定')
+     A*
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 55'売掛金照会・入金消込'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A                                      3  2'請求番号'
+     A                                      DSPATR(HI)
+     A            INVNO         10A  O  3 11DSPATR(HI)
+     A                                      3 25'請求日付'
+     A                                      DSPATR(HI)
+     A            INVDT          8A  O  3 34DSPATR(HI)
+     A                                      3 47'支払期日'
+     A                                      DSPATR(HI)
+     A            DUEDT          8A  O  3 56DSPATR(HI)
+     A*
+     A                                      5  2'得意先CD'
+     A                                      DSPATR(HI)
+     A            ARCUSTCD      10A  O  5 11DSPATR(HI)
+     A                                      5 25'得意先名'
+     A                                      DSPATR(HI)
+     A            ARCUSTNM      40A  O  5 34DSPATR(HI)
+     A*
+     A                                      7  2'商品名'
+     A                                      DSPATR(HI)
+     A            ARITMNM       40A  O  7  9DSPATR(HI)
+     A                                      7 53'数量'
+     A                                      DSPATR(HI)
+     A            ARQTY          7P 0O  7 58EDTCDE(1)
+     A                                      DSPATR(HI)
+     A*
+     A                                      9  2'請求金額'
+     A                                      DSPATR(HI)
+     A            INVAMT        11P 2O  9 11EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      9 27'消費税'
+     A                                      DSPATR(HI)
+     A            TAXAMT         9P 2O  9 34EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      9 48'未収残高'
+     A                                      DSPATR(HI)
+     A            BALAMT        11P 2O  9 57EDTCDE(1)
+     A                                      DSPATR(RI)
+     A*
+     A                                      11  2'入金日付'
+     A                                      DSPATR(HI)
+     A            RCVDT          8A  B 11 11DSPATR(UL)
+     A                                      11 24'入金方法'
+     A                                      DSPATR(HI)
+     A            RCVMTD         2A  B 11 33
+     A                                      11 38'01=振込 02=手形 03=現金'
+     A*
+     A                                      13  2'今回入金額'
+     A                                      DSPATR(HI)
+     A            NOWRCV        11P 2B 13 13EDTCDE(1)
+     A*
+     A                                      23  2'F3=終了  F4=入金消込確定'
+     A                                      DSPATR(HI)
+     A            MSGAR         79A  O 24  2COLOR(RED)
+     A*
+     A* =================================================================
+     A* フォーマット：APDET（買掛金明細・支払処理画面）
+     A* =================================================================
+     A          R APDET
+     A                                      CF04(04 'F4=支払確定')
+     A*
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 55'買掛金照会・支払処理'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A                                      3  2'仕入番号'
+     A                                      DSPATR(HI)
+     A            PONO          10A  O  3 11DSPATR(HI)
+     A                                      3 25'仕入日付'
+     A                                      DSPATR(HI)
+     A            PODT           8A  O  3 34DSPATR(HI)
+     A                                      3 47'支払予定日'
+     A                                      DSPATR(HI)
+     A            PAYDT          8A  O  3 58DSPATR(HI)
+     A*
+     A                                      5  2'仕入先CD'
+     A                                      DSPATR(HI)
+     A            APSUPCD       10A  O  5 11DSPATR(HI)
+     A                                      5 25'仕入先名'
+     A                                      DSPATR(HI)
+     A            APSUPNM       40A  O  5 34DSPATR(HI)
+     A*
+     A                                      7  2'商品名'
+     A                                      DSPATR(HI)
+     A            APITMNM       40A  O  7  9DSPATR(HI)
+     A                                      7 53'数量'
+     A                                      DSPATR(HI)
+     A            APQTY          7P 0O  7 58EDTCDE(1)
+     A                                      DSPATR(HI)
+     A*
+     A                                      9  2'仕入金額'
+     A                                      DSPATR(HI)
+     A            POAMT         11P 2O  9 11EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      9 27'消費税'
+     A                                      DSPATR(HI)
+     A            APTAXAMT       9P 2O  9 34EDTCDE(1)
+     A                                      DSPATR(HI)
+     A                                      9 48'未払残高'
+     A                                      DSPATR(HI)
+     A            APBALAMT      11P 2O  9 57EDTCDE(1)
+     A                                      DSPATR(RI)
+     A*
+     A                                      11  2'支払日付'
+     A                                      DSPATR(HI)
+     A            ACTPAYDT       8A  B 11 11DSPATR(UL)
+     A                                      11 24'支払方法'
+     A                                      DSPATR(HI)
+     A            PAYMTD         2A  B 11 33
+     A                                      11 38'01=振込 02=手形 03=現金'
+     A*
+     A                                      13  2'今回支払額'
+     A                                      DSPATR(HI)
+     A            NOWPAY        11P 2B 13 13EDTCDE(1)
+     A*
+     A                                      23  2'F3=終了  F4=支払確定'
+     A                                      DSPATR(HI)
+     A            MSGAP         79A  O 24  2COLOR(RED)

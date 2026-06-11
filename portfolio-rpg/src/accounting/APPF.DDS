@@ -1,0 +1,59 @@
+     A* =================================================================
+     A* ファイル名：APPF
+     A* 機　　能：買掛金物理ファイル（Accounts Payable）
+     A* キー　　：仕入番号（PONO）
+     A* =================================================================
+     A                                      UNIQUE
+     A          R APREC                     TEXT('買掛金レコード')
+     A*
+     A* --- 仕入基本情報 ---
+     A            PONO          10A         TEXT('仕入番号')
+     A                                      COLHDG('仕入番号')
+     A            PODT           8A         TEXT('仕入日付YYYYMMDD')
+     A                                      COLHDG('仕入日付')
+     A            PAYDT          8A         TEXT('支払予定日YYYYMMDD')
+     A                                      COLHDG('支払予定日')
+     A*
+     A* --- 仕入先情報 ---
+     A            SUPCD         10A         TEXT('仕入先コード')
+     A                                      COLHDG('仕入先' 'コード')
+     A            SUPNM         40A         TEXT('仕入先名')
+     A                                      COLHDG('仕入先名')
+     A*
+     A* --- 商品情報 ---
+     A            ITMCD         10A         TEXT('商品コード')
+     A                                      COLHDG('商品コード')
+     A            ITMNM         40A         TEXT('商品名')
+     A                                      COLHDG('商品名')
+     A            QTY            7P 0       TEXT('仕入数量')
+     A                                      COLHDG('仕入数量')
+     A            CPRC           9P 2       TEXT('仕入単価')
+     A                                      COLHDG('仕入単価')
+     A*
+     A* --- 金額 ---
+     A            POAMT         11P 2       TEXT('仕入金額（税込）')
+     A                                      COLHDG('仕入金額')
+     A            TAXAMT         9P 2       TEXT('消費税額')
+     A                                      COLHDG('消費税')
+     A            PAYAMT        11P 2       TEXT('支払済金額')
+     A                                      COLHDG('支払済金額')
+     A            BALAMT        11P 2       TEXT('未払残高')
+     A                                      COLHDG('未払残高')
+     A*
+     A* --- 支払情報 ---
+     A            ACTPAYDT       8A         TEXT('実際支払日YYYYMMDD')
+     A                                      COLHDG('実支払日')
+     A            PAYMTD         2A         TEXT('支払方法 01=振込 02=手形 03=現金')
+     A                                      COLHDG('支払方法')
+     A*
+     A* --- ステータス ---
+     A            APSTS          1A         TEXT('買掛ステータス 1=未払 2=一部支払 3=完済 9=取消')
+     A                                      COLHDG('ｽﾃｰﾀｽ')
+     A*
+     A* --- 更新情報 ---
+     A            UPDDT          8A         TEXT('最終更新日YYYYMMDD')
+     A                                      COLHDG('更新日')
+     A            UPDUID        10A         TEXT('更新ユーザーID')
+     A                                      COLHDG('更新者')
+     A*
+     A          K PONO

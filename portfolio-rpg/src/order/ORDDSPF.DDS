@@ -1,0 +1,137 @@
+     A* =================================================================
+     A* ファイル名：ORDDSPF
+     A* 機　　能：受注管理画面ファイル
+     A* 画面サイズ：24行 × 80桁
+     A* =================================================================
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      PRINT
+     A                                      CA03(03 'F3=終了')
+     A*
+     A* =================================================================
+     A* フォーマット：ORDMNU（受注メニュー・一覧画面）
+     A* =================================================================
+     A          R ORDMNU
+     A                                      CA06(06 'F6=新規登録')
+     A                                      CA05(05 'F5=再表示')
+     A                                      RTNCSRLOC(*RECNAME *FLDNAME)
+     A*
+     A* --- ヘッダー ---
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 50'受発注管理'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A* --- 検索条件 ---
+     A                                      3  2'受注番号:'
+     A            SRORDNO       10A  B  3 11DSPATR(UL)
+     A                                      3 25'得意先CD:'
+     A            SRCUSTCD      10A  B  3 34DSPATR(UL)
+     A*
+     A* --- 一覧ヘッダー ---
+     A                                      5  2'受注番号    得意先名                  +
+     A                                         受注日付  数量       金額  ｽﾃｰﾀｽ'
+     A                                      DSPATR(HI)
+     A                                      6  2'----------+-------------------------------+
+     A                                         --------+-------+-----------+------'
+     A*
+     A* --- 操作ガイド ---
+     A                                      23  2'F3=終了  F5=再表示  F6=新規登録  +
+     A                                         Enter=検索'
+     A                                      DSPATR(HI)
+     A            MSGLST        79A  O 24  2COLOR(RED)
+     A*
+     A* =================================================================
+     A* フォーマット：ORDDET（受注明細入力画面）
+     A* =================================================================
+     A          R ORDDET
+     A                                      CF04(04 'F4=確定登録')
+     A                                      CA09(09 'F9=削除')
+     A*
+     A* --- ヘッダー ---
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 55'受注明細'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A* --- 受注基本情報 ---
+     A                                      3  2'受注番号'
+     A                                      DSPATR(HI)
+     A            ORDNO         10A  B  3 12DSPATR(UL)
+     A                                      4  2'受注日付'
+     A                                      DSPATR(HI)
+     A            ORDDT          8A  B  4 12
+     A                                      4 25'納品予定日'
+     A                                      DSPATR(HI)
+     A            DLVDT          8A  B  4 36
+     A*
+     A* --- 得意先情報 ---
+     A                                      6  2'得意先CD'
+     A                                      DSPATR(HI)
+     A            CUSTCD        10A  B  6 12DSPATR(UL)
+     A                                      6 25'得意先名'
+     A                                      DSPATR(HI)
+     A            CUSTNM        40A  B  6 34
+     A*
+     A* --- 商品情報 ---
+     A                                      8  2'商品コード'
+     A                                      DSPATR(HI)
+     A            ITMCD         10A  B  8 13DSPATR(UL)
+     A                                      8 28'商品名'
+     A                                      DSPATR(HI)
+     A            ITMNM         40A  B  8 35
+     A*
+     A* --- 数量・金額 ---
+     A                                      10  2'数　量'
+     A                                      DSPATR(HI)
+     A            QTY            7P 0B 10 10EDTCDE(1)
+     A                                      10 22'単　価'
+     A                                      DSPATR(HI)
+     A            UNTPRC         9P 2B 10 30EDTCDE(1)
+     A                                      10 44'受注金額'
+     A                                      DSPATR(HI)
+     A            AMT           11P 2O 10 53EDTCDE(1)
+     A                                      DSPATR(HI)
+     A*
+     A* --- ステータス ---
+     A                                      12  2'ｽﾃｰﾀｽ'
+     A                                      DSPATR(HI)
+     A            ORDSTS         1A  B 12 10
+     A                                      12 14'1=受注 2=在庫引当済 3=出荷済 9=取消'
+     A*
+     A* --- 備考 ---
+     A                                      14  2'備　考'
+     A                                      DSPATR(HI)
+     A            RMRK         100A  B 14 10
+     A*
+     A* --- 操作ガイド ---
+     A                                      23  2'F3=終了  F4=確定登録  F9=削除'
+     A                                      DSPATR(HI)
+     A            MSGDET        79A  O 24  2COLOR(RED)
+     A*
+     A* =================================================================
+     A* フォーマット：ORDBCK（受注残照会画面）
+     A* =================================================================
+     A          R ORDBCK
+     A*
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 55'受注残照会'
+     A                                      DSPATR(HI)
+     A*
+     A                                      3  2'得意先CD'
+     A                                      DSPATR(HI)
+     A            BKCUSTCD      10A  B  3 12DSPATR(UL)
+     A                                      3 26'ｽﾃｰﾀｽ'
+     A                                      DSPATR(HI)
+     A            BKSTS          1A  B  3 33
+     A                                      3 37'（空白=全件）'
+     A*
+     A                                      5  2'受注番号    受注日付  商品名              +
+     A                                         受注数量   受注金額  ｽﾃｰﾀｽ'
+     A                                      DSPATR(HI)
+     A*
+     A                                      23  2'F3=終了  Enter=検索'
+     A                                      DSPATR(HI)
+     A            MSGBCK        79A  O 24  2COLOR(RED)

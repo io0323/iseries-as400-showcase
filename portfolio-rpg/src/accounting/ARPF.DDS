@@ -1,0 +1,61 @@
+     A* =================================================================
+     A* ファイル名：ARPF
+     A* 機　　能：売掛金物理ファイル（Accounts Receivable）
+     A* キー　　：請求番号（INVNO）
+     A* =================================================================
+     A                                      UNIQUE
+     A          R ARREC                     TEXT('売掛金レコード')
+     A*
+     A* --- 請求基本情報 ---
+     A            INVNO         10A         TEXT('請求番号')
+     A                                      COLHDG('請求番号')
+     A            INVDT          8A         TEXT('請求日付YYYYMMDD')
+     A                                      COLHDG('請求日付')
+     A            DUEDT          8A         TEXT('支払期日YYYYMMDD')
+     A                                      COLHDG('支払期日')
+     A*
+     A* --- 得意先情報 ---
+     A            CUSTCD        10A         TEXT('得意先コード')
+     A                                      COLHDG('得意先' 'コード')
+     A            CUSTNM        40A         TEXT('得意先名')
+     A                                      COLHDG('得意先名')
+     A*
+     A* --- 受注情報 ---
+     A            ORDNO         10A         TEXT('受注番号（参照）')
+     A                                      COLHDG('受注番号')
+     A            ITMCD         10A         TEXT('商品コード')
+     A                                      COLHDG('商品コード')
+     A            ITMNM         40A         TEXT('商品名')
+     A                                      COLHDG('商品名')
+     A            QTY            7P 0       TEXT('請求数量')
+     A                                      COLHDG('請求数量')
+     A            UNTPRC         9P 2       TEXT('単価')
+     A                                      COLHDG('単価')
+     A*
+     A* --- 金額 ---
+     A            INVAMT        11P 2       TEXT('請求金額（税込）')
+     A                                      COLHDG('請求金額')
+     A            TAXAMT         9P 2       TEXT('消費税額')
+     A                                      COLHDG('消費税')
+     A            RCVAMT        11P 2       TEXT('入金済金額')
+     A                                      COLHDG('入金済金額')
+     A            BALAMT        11P 2       TEXT('未収残高')
+     A                                      COLHDG('未収残高')
+     A*
+     A* --- 入金情報 ---
+     A            RCVDT          8A         TEXT('入金日付YYYYMMDD')
+     A                                      COLHDG('入金日付')
+     A            RCVMTD         2A         TEXT('入金方法 01=振込 02=手形 03=現金')
+     A                                      COLHDG('入金方法')
+     A*
+     A* --- ステータス ---
+     A            ARSTS          1A         TEXT('売掛ステータス 1=未収 2=一部入金 3=完済 9=取消')
+     A                                      COLHDG('ｽﾃｰﾀｽ')
+     A*
+     A* --- 更新情報 ---
+     A            UPDDT          8A         TEXT('最終更新日YYYYMMDD')
+     A                                      COLHDG('更新日')
+     A            UPDUID        10A         TEXT('更新ユーザーID')
+     A                                      COLHDG('更新者')
+     A*
+     A          K INVNO

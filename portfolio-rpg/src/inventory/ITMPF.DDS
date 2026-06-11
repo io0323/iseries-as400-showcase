@@ -1,0 +1,51 @@
+     A* =================================================================
+     A* ファイル名：ITMPF
+     A* 機　　能：商品マスタ物理ファイル
+     A* キー　　：商品コード（ITMCD）
+     A* =================================================================
+     A                                      UNIQUE
+     A          R ITMREC                    TEXT('商品マスタレコード')
+     A*
+     A* --- 商品基本情報 ---
+     A            ITMCD         10A         TEXT('商品コード')
+     A                                      COLHDG('商品コード')
+     A            ITMNM         40A         TEXT('商品名（漢字）')
+     A                                      COLHDG('商品名')
+     A            ITMKN         40A         TEXT('商品名（カナ）')
+     A                                      COLHDG('商品名カナ')
+     A*
+     A* --- カテゴリ ---
+     A            CATCD          4A         TEXT('カテゴリコード')
+     A                                      COLHDG('カテゴリ' 'コード')
+     A            CATNM         20A         TEXT('カテゴリ名')
+     A                                      COLHDG('カテゴリ名')
+     A*
+     A* --- 価格情報 ---
+     A            UNTPRC         9P 2       TEXT('販売単価')
+     A                                      COLHDG('販売単価')
+     A            CPRC           9P 2       TEXT('仕入単価')
+     A                                      COLHDG('仕入単価')
+     A*
+     A* --- 在庫管理情報 ---
+     A            SAFSTK         7P 0       TEXT('安全在庫数')
+     A                                      COLHDG('安全在庫')
+     A            ORDPT          7P 0       TEXT('発注点')
+     A                                      COLHDG('発注点')
+     A            ORDQTY         7P 0       TEXT('発注ロット数')
+     A                                      COLHDG('発注ロット')
+     A*
+     A* --- 仕入先情報 ---
+     A            SUPCD         10A         TEXT('仕入先コード')
+     A                                      COLHDG('仕入先' 'コード')
+     A            SUPNM         40A         TEXT('仕入先名')
+     A                                      COLHDG('仕入先名')
+     A*
+     A* --- 管理情報 ---
+     A            ITMSTS         1A         TEXT('商品ステータス 1=有効 9=廃番')
+     A                                      COLHDG('ステータス')
+     A            UPDDT          8A         TEXT('最終更新日YYYYMMDD')
+     A                                      COLHDG('更新日')
+     A            UPDUID        10A         TEXT('更新ユーザーID')
+     A                                      COLHDG('更新者')
+     A*
+     A          K ITMCD
