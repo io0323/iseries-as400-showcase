@@ -1,0 +1,48 @@
+     A* =================================================================
+     A* ファイル名：INVPF
+     A* 機　　能：在庫物理ファイル
+     A* キー　　：商品コード（ITMCD）+ ロケーションコード（LOCCD）
+     A* =================================================================
+     A                                      UNIQUE
+     A          R INVREC                    TEXT('在庫レコード')
+     A*
+     A* --- キー項目 ---
+     A            ITMCD         10A         TEXT('商品コード')
+     A                                      COLHDG('商品コード')
+     A            LOCCD         10A         TEXT('ロケーションコード（棚番号）')
+     A                                      COLHDG('ロケーション' 'コード')
+     A*
+     A* --- 商品名（参照用） ---
+     A            ITMNM         40A         TEXT('商品名')
+     A                                      COLHDG('商品名')
+     A*
+     A* --- 在庫数量 ---
+     A            STKQTY         9P 0       TEXT('在庫数量')
+     A                                      COLHDG('在庫数量')
+     A            ALCQTY         9P 0       TEXT('引当数量')
+     A                                      COLHDG('引当数量')
+     A            AVLQTY         9P 0       TEXT('有効在庫数量（在庫-引当）')
+     A                                      COLHDG('有効在庫')
+     A*
+     A* --- 入出庫累計 ---
+     A            RCVQTY         9P 0       TEXT('累計入庫数量')
+     A                                      COLHDG('累計入庫')
+     A            SHPQTY         9P 0       TEXT('累計出庫数量')
+     A                                      COLHDG('累計出庫')
+     A*
+     A* --- 入出庫直近日 ---
+     A            LSTRCVDT       8A         TEXT('最終入庫日YYYYMMDD')
+     A                                      COLHDG('最終入庫日')
+     A            LSTSHPDT       8A         TEXT('最終出庫日YYYYMMDD')
+     A                                      COLHDG('最終出庫日')
+     A*
+     A* --- 更新情報 ---
+     A            UPDDT          8A         TEXT('最終更新日YYYYMMDD')
+     A                                      COLHDG('更新日')
+     A            UPDTM          6A         TEXT('最終更新時刻HHMMSS')
+     A                                      COLHDG('更新時刻')
+     A            UPDUID        10A         TEXT('更新ユーザーID')
+     A                                      COLHDG('更新者')
+     A*
+     A          K ITMCD
+     A          K LOCCD

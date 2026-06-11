@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>インテリア商社 AS/400 基幹システム ポートフォリオ</title>
+  <style>
+    :root {
+      --green: #33ff33;
+      --dim-green: #1a8c1a;
+      --bright: #66ff66;
+      --amber: #ffcc00;
+      --red: #ff4444;
+      --bg: #000000;
+      --border: #1a5c1a;
+      --input-bg: #001200;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--green);
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    /* ヘッダー */
+    #header {
+      background: var(--border);
+      padding: 4px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--green);
+    }
+
+    #header h1 {
+      font-size: 13px;
+      color: var(--bright);
+      letter-spacing: 1px;
+    }
+
+    #clock {
+      color: var(--amber);
+      font-size: 12px;
+    }
+
+    /* タブ */
+    #tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #001a00;
+      padding: 0 8px;
+    }
+
+    .tab {
+      padding: 6px 16px;
+      cursor: pointer;
+      color: var(--dim-green);
+      border-right: 1px solid var(--border);
+      font-size: 12px;
+      user-select: none;
+    }
+
+    .tab:hover {
+      color: var(--green);
+    }
+
+    .tab.active {
+      color: var(--bright);
+      background: #002800;
+      border-bottom: 2px solid var(--bright);
+    }
+
+    /* コンテンツ */
+    #content {
+      padding: 12px;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    /* スクリーンフレーム（5250端末風） */
+    .screen {
+      border: 1px solid var(--border);
+      background: #000800;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+
+    .screen-title {
+      color: var(--bright);
+      font-size: 12px;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* サマリーカード */
+    .summary-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .card-label {
+      color: var(--dim-green);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .card-value {
+      color: var(--bright);
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .card-value.warn {
+      color: var(--amber);
+    }
+
+    .card-value.alert {
+      color: var(--red);
+    }
+
+    /* テーブル */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .tbl th {
+      color: var(--amber);
+      padding: 4px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .tbl td {
+      color: var(--green);
+      padding: 3px 8px;
+      border-bottom: 1px solid #001a00;
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    .tbl tr:hover td {
+      background: #001800;
+      color: var(--bright);
+      cursor: pointer;
+    }
+
+    .tbl tr.cancelled td {
+      color: var(--dim-green);
+      text-decoration: line-through;
+    }
+
+    /* ステータスバッジ */
+    .sts {
+      padding: 1px 6px;
+      font-size: 10px;
+    }
+
+    .sts-1 {
+      color: #aaffaa;
+    }
+
+    .sts-2 {
+      color: var(--amber);
+    }
+
+    .sts-3 {
+      color: #55aaff;
+    }
+
+    .sts-9 {
+      color: #666;
+    }
+
+    /* フォーム */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .form-group label {
+      color: var(--dim-green);
+      font-size: 11px;
+    }
+
+    .form-group input,
+    .form-group select {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--green);
+      padding: 4px 8px;
+      font-family: monospace;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--green);
+      color: var(--bright);
+    }
+
+    select option {
+      background: #001200;
+    }
+
+    /* ボタン */
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin: 8px 0;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: #002200;
+      border: 1px solid var(--border);
+      color: var(--green);
+      padding: 5px 14px;
+      font-family: monospace;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: #003300;
+      color: var(--bright);
+      border-color: var(--green);
+    }
+
+    button.primary {
+      border-color: var(--bright);
+      color: var(--bright);
+    }
+
+    button.danger {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* メッセージ */
+    #msg {
+      min-height: 20px;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    #msg.ok {
+      color: var(--bright);
+    }
+
+    #msg.err {
+      color: var(--red);
+    }
+
+    /* モーダル */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-bg.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #000800;
+      border: 1px solid var(--green);
+      padding: 16px;
+      width: 90%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      color: var(--bright);
+      font-size: 13px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      color: var(--red);
+    }
+
+    /* 数値右寄せ */
+    .num {
+      text-align: right;
+    }
+
+    /* ロケーション */
+    .loc {
+      color: #88ccff;
+    }
+
+    /* 安全在庫警告 */
+    .stk-warn {
+      color: var(--amber) !important;
+    }
+
+    .stk-alert {
+      color: var(--red) !important;
+    }
+
+    /* フンクションキーガイド */
+    .fkey-bar {
+      margin-top: 8px;
+      padding: 4px 0;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--dim-green);
+    }
+
+    .fkey {
+      color: var(--amber);
+      margin-right: 4px;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #001000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="header">
+    <h1>インテリア商社基幹システム ［AS/400 RPG IV io0323環境］</h1>
+    <span id="clock"></span>
+  </div>
+
+  <div id="tabs">
+    <div class="tab active" data-tab="order">F1 受発注管理</div>
+    <div class="tab" data-tab="inventory">F2 物流在庫管理</div>
+    <div class="tab" data-tab="accounting">F3 会計管理</div>
+    <div class="tab" data-tab="about">F4 システム概要</div>
+  </div>
+
+  <div id="content">
+
+    <!-- ================================================================ -->
+    <!-- 受発注管理パネル -->
+    <!-- ================================================================ -->
+    <div class="panel active" id="panel-order">
+      <div class="screen">
+        <div class="screen-title">
+          <span>ORDMGR — 受注管理 ［物理ファイル: ORDPF / 論理ファイル: ORDLF / 画面: ORDDSPF］</span>
+          <span id="ord-cnt" style="color:var(--dim-green)"></span>
+        </div>
+        <div class="summary-row" id="ord-summary"></div>
+        <div class="btn-row">
+          <button class="primary" onclick="showOrdModal()">F6=新規受注登録</button>
+          <button onclick="loadOrders('all')">全件表示</button>
+          <button onclick="loadOrders('open')">F7=受注残照会</button>
+          <select id="ord-sts-filter"
+            style="background:#001200;border:1px solid var(--border);color:var(--green);padding:4px;font-family:monospace;font-size:12px">
+            <option value="">— ステータス絞込 —</option>
+            <option value="1">1=受注</option>
+            <option value="2">2=在庫引当済</option>
+            <option value="3">3=出荷済</option>
+            <option value="9">9=取消</option>
+          </select>
+          <button onclick="filterOrders()">Enter=検索</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="ord-tbl">
+            <thead>
+              <tr>
+                <th>受注番号</th>
+                <th>受注日付</th>
+                <th>得意先名</th>
+                <th>商品名</th>
+                <th class="num">数量</th>
+                <th class="num">受注金額</th>
+                <th>納品予定日</th>
+                <th>ｽﾃｰﾀｽ</th>
+              </tr>
+            </thead>
+            <tbody id="ord-tbody"></tbody>
+          </table>
+        </div>
+        <div class="fkey-bar">
+          <span class="fkey">F6</span>新規登録
+          <span class="fkey" style="margin-left:12px">F7</span>受注残照会
+          <span class="fkey" style="margin-left:12px">Enter</span>明細表示
+          <span class="fkey" style="margin-left:12px">F9</span>取消
+        </div>
+      </div>
+      <div id="msg" class="ok"></div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 物流在庫管理パネル -->
+    <!-- ================================================================ -->
+    <div class="panel" id="panel-inventory">
+      <div class="screen">
+        <div class="screen-title">
+          <span>INVMGR — 在庫管理 ［物理ファイル: ITMPF / INVPF / 論理ファイル: INVLF / 画面: INVDSPF］</span>
+        </div>
+        <div class="summary-row" id="inv-summary"></div>
+        <div class="btn-row">
+          <button onclick="showRcvModal()">F7=入庫処理</button>
+          <button onclick="showShpModal()">F8=出庫処理</button>
+          <button onclick="showAdjModal()">在庫調整</button>
+          <button onclick="loadInventory()">F5=再表示</button>
+          <button onclick="loadLowStock()" class="danger">安全在庫割れ</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="inv-tbl">
+            <thead>
+              <tr>
+                <th>商品コード</th>
+                <th>商品名</th>
+                <th>ロケーション</th>
+                <th class="num">在庫数</th>
+                <th class="num">引当数</th>
+                <th class="num">有効在庫</th>
+                <th>最終入庫日</th>
+                <th>最終出庫日</th>
+              </tr>
+            </thead>
+            <tbody id="inv-tbody"></tbody>
+          </table>
+        </div>
+        <div class="fkey-bar">
+          <span class="fkey">F7</span>入庫
+          <span class="fkey" style="margin-left:12px">F8</span>出庫
+          <span class="fkey" style="margin-left:12px">F5</span>再表示
+        </div>
+      </div>
+      <div id="msg-inv" class="ok"></div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 会計管理パネル -->
+    <!-- ================================================================ -->
+    <div class="panel" id="panel-accounting">
+      <div class="screen">
+        <div class="screen-title">
+          <span>ACCMGR — 会計管理 ［売掛ファイル: ARPF / 買掛ファイル: APPF / 画面: ACCDSPF］</span>
+        </div>
+        <div class="summary-row" id="acc-summary"></div>
+        <!-- 売掛 -->
+        <div style="color:var(--amber);font-size:12px;margin:8px 0 4px">【売掛金一覧】 AR (Accounts Receivable)</div>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="ar-tbl">
+            <thead>
+              <tr>
+                <th>請求番号</th>
+                <th>請求日付</th>
+                <th>支払期日</th>
+                <th>得意先名</th>
+                <th>商品名</th>
+                <th class="num">請求金額</th>
+                <th class="num">入金済</th>
+                <th class="num">未収残高</th>
+                <th>ｽﾃｰﾀｽ</th>
+              </tr>
+            </thead>
+            <tbody id="ar-tbody"></tbody>
+          </table>
+        </div>
+        <!-- 買掛 -->
+        <div style="color:var(--amber);font-size:12px;margin:14px 0 4px">【買掛金一覧】 AP (Accounts Payable)</div>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="ap-tbl">
+            <thead>
+              <tr>
+                <th>仕入番号</th>
+                <th>仕入日付</th>
+                <th>支払予定日</th>
+                <th>仕入先名</th>
+                <th>商品名</th>
+                <th class="num">仕入金額</th>
+                <th class="num">支払済</th>
+                <th class="num">未払残高</th>
+                <th>ｽﾃｰﾀｽ</th>
+              </tr>
+            </thead>
+            <tbody id="ap-tbody"></tbody>
+          </table>
+        </div>
+        <div class="fkey-bar">
+          <span class="fkey">Enter</span>入金消込・支払処理
+        </div>
+      </div>
+      <div id="msg-acc" class="ok"></div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- システム概要パネル -->
+    <!-- ================================================================ -->
+    <div class="panel" id="panel-about">
+      <div class="screen">
+        <div class="screen-title"><span>システム概要 — IBM i / AS/400 RPG IV ポートフォリオ</span></div>
+        <div style="line-height:1.8;font-size:12px;max-width:700px">
+          <p style="color:var(--bright);margin-bottom:8px">■ プロジェクト概要</p>
+          <p>インテリア専門商社向け基幹システムのRPG IVポートフォリオです。</p>
+          <p style="color:var(--dim-green)">受発注・物流在庫・会計の3モジュールをFree-format RPG（**FREE）で実装しています。</p>
+          <br>
+          <p style="color:var(--bright);margin-bottom:8px">■ 実装ファイル構成</p>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>モジュール</th>
+                <th>ファイル</th>
+                <th>種別</th>
+                <th>説明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>受発注</td>
+                <td>ORDPF.DDS</td>
+                <td>物理ファイル</td>
+                <td>受注データ（主キー：受注番号）</td>
+              </tr>
+              <tr>
+                <td>受発注</td>
+                <td>ORDLF.DDS</td>
+                <td>論理ファイル</td>
+                <td>得意先コード・日付順アクセスパス</td>
+              </tr>
+              <tr>
+                <td>受発注</td>
+                <td>ORDDSPF.DDS</td>
+                <td>ディスプレイファイル</td>
+                <td>5250端末画面定義（ORDMNU/ORDDET）</td>
+              </tr>
+              <tr>
+                <td>受発注</td>
+                <td>ORDMGR.RPGLE</td>
+                <td>RPG IV</td>
+                <td>CRUD・在庫引当・受注残照会</td>
+              </tr>
+              <tr>
+                <td>在庫</td>
+                <td>ITMPF.DDS</td>
+                <td>物理ファイル</td>
+                <td>商品マスタ</td>
+              </tr>
+              <tr>
+                <td>在庫</td>
+                <td>INVPF.DDS</td>
+                <td>物理ファイル</td>
+                <td>在庫（商品+ロケーション複合キー）</td>
+              </tr>
+              <tr>
+                <td>在庫</td>
+                <td>INVLF.DDS</td>
+                <td>論理ファイル</td>
+                <td>ロケーション順アクセスパス</td>
+              </tr>
+              <tr>
+                <td>在庫</td>
+                <td>INVMGR.RPGLE</td>
+                <td>RPG IV</td>
+                <td>入出庫・在庫調整・AllocateStock</td>
+              </tr>
+              <tr>
+                <td>会計</td>
+                <td>ARPF.DDS</td>
+                <td>物理ファイル</td>
+                <td>売掛金（消費税・入金消込）</td>
+              </tr>
+              <tr>
+                <td>会計</td>
+                <td>APPF.DDS</td>
+                <td>物理ファイル</td>
+                <td>買掛金（仕入・支払処理）</td>
+              </tr>
+              <tr>
+                <td>会計</td>
+                <td>ACCMGR.RPGLE</td>
+                <td>RPG IV</td>
+                <td>入金消込・支払処理・残高照会</td>
+              </tr>
+              <tr>
+                <td>共通</td>
+                <td>UTILSRV.RPGLE</td>
+                <td>SRVPGM</td>
+                <td>日付変換・採番・税額計算ユーティリティ</td>
+              </tr>
+              <tr>
+                <td>共通</td>
+                <td>ERRSRV.RPGLE</td>
+                <td>SRVPGM</td>
+                <td>エラー管理・バリデーション共通処理</td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <p style="color:var(--bright);margin-bottom:8px">■ RPG IV 実装の特徴</p>
+          <pre style="color:var(--dim-green);font-size:11px;padding:8px;border:1px solid var(--border)">**FREE
+// Free-format RPG IV（**FREE宣言）
+Ctl-Opt DftActGrp(*No) ActGrp('ORDMGR') BndDir('QC2LE');
+
+// ファイル定義（DCL-F）
+DCL-F ORDPF    Keyed Usage(*Update : *Delete : *Output : *Input);
+DCL-F ORDDSPF  WorkStn;
+
+// データ構造（DCL-DS）
+DCL-DS OrdDs LikeRec(ORDREC : *All);
+
+// プロシージャ（DCL-PROC）
+DCL-PROC GenOrderNo;
+  DCL-PI *N Char(10);
+  END-PI;
+  // 最終受注番号+1で採番
+  Return 'ORD' + %EditC(LclSeq : 'Z');
+END-PROC;</pre>
+          <br>
+          <p style="color:var(--bright);margin-bottom:8px">■ シミュレータ構成</p>
+          <p><span style="color:var(--amber)">server.js</span> — Node.js標準モジュールのみで構築（依存なし）</p>
+          <p><span style="color:var(--amber)">rpg-interpreter.js</span> — RPGビジネスロジックをJSに移植・サンプルデータ内包</p>
+          <p><span style="color:var(--amber)">起動コマンド：</span> <code
+              style="color:var(--green)">node simulator/server.js</code></p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ================================================================ -->
+  <!-- 受注登録モーダル -->
+  <!-- ================================================================ -->
+  <div class="modal-bg" id="ord-modal">
+    <div class="modal">
+      <div class="modal-title">
+        <span id="ord-modal-title">受注登録 ORDMGR — ORDDET</span>
+        <span class="modal-close" onclick="closeModal('ord-modal')">F3=閉じる</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>得意先コード *</label>
+          <select id="f-custcd">
+            <option value="">— 選択 —</option>
+            <option value="C001">C001 株式会社山田インテリア</option>
+            <option value="C002">C002 鈴木家具販売株式会社</option>
+            <option value="C003">C003 東京インテリアショップ</option>
+            <option value="C004">C004 大阪リビング株式会社</option>
+            <option value="C005">C005 名古屋家具センター株式会社</option>
+            <option value="C006">C006 福岡インテリアプロ株式会社</option>
+            <option value="C007">C007 横浜リビングスタイル</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>商品コード *</label>
+          <select id="f-itmcd" onchange="onItemSelect()">
+            <option value="">— 選択 —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>数量 *</label>
+          <input type="number" id="f-qty" min="1" value="1">
+        </div>
+        <div class="form-group">
+          <label>単価</label>
+          <input type="number" id="f-untprc" readonly style="color:var(--dim-green)">
+        </div>
+        <div class="form-group">
+          <label>納品予定日 (YYYYMMDD)</label>
+          <input type="text" id="f-dlvdt" placeholder="20260630">
+        </div>
+        <div class="form-group">
+          <label>備考</label>
+          <input type="text" id="f-rmrk">
+        </div>
+      </div>
+      <div id="ord-calc" style="color:var(--amber);font-size:12px;margin:4px 0"></div>
+      <div class="btn-row">
+        <button class="primary" onclick="submitOrder()">F4=確定登録</button>
+        <button onclick="closeModal('ord-modal')">F3=取消</button>
+      </div>
+      <div id="ord-modal-msg" style="font-size:12px;margin-top:6px;color:var(--red)"></div>
+    </div>
+  </div>
+
+  <!-- 受注詳細モーダル -->
+  <div class="modal-bg" id="ord-detail-modal">
+    <div class="modal">
+      <div class="modal-title">
+        <span>受注明細 ORDMGR — ORDDET</span>
+        <span class="modal-close" onclick="closeModal('ord-detail-modal')">F3=閉じる</span>
+      </div>
+      <div id="ord-detail-body" style="font-size:12px;line-height:2"></div>
+      <div class="btn-row" id="ord-detail-btns"></div>
+      <div id="ord-detail-msg" style="font-size:12px;color:var(--red);margin-top:6px"></div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- 入庫モーダル -->
+  <!-- ================================================================ -->
+  <div class="modal-bg" id="rcv-modal">
+    <div class="modal">
+      <div class="modal-title">
+        <span>入庫処理 INVMGR — NYUKO</span>
+        <span class="modal-close" onclick="closeModal('rcv-modal')">F3=閉じる</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>商品コード *</label>
+          <select id="rcv-itmcd" onchange="onRcvItemSelect()">
+            <option value="">— 選択 —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ロケーション</label>
+          <input type="text" id="rcv-loccd" readonly style="color:var(--dim-green)">
+        </div>
+        <div class="form-group">
+          <label>現在在庫数</label>
+          <input type="number" id="rcv-cur" readonly style="color:var(--dim-green)">
+        </div>
+        <div class="form-group">
+          <label>入庫数量 *</label>
+          <input type="number" id="rcv-qty" min="1" value="1">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" onclick="submitReceive()">F4=入庫確定</button>
+        <button onclick="closeModal('rcv-modal')">F3=取消</button>
+      </div>
+      <div id="rcv-msg" style="font-size:12px;color:var(--red);margin-top:6px"></div>
+    </div>
+  </div>
+
+  <!-- 出庫モーダル -->
+  <div class="modal-bg" id="shp-modal">
+    <div class="modal">
+      <div class="modal-title">
+        <span>出庫処理 INVMGR — SHUPPO</span>
+        <span class="modal-close" onclick="closeModal('shp-modal')">F3=閉じる</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>商品コード *</label>
+          <select id="shp-itmcd" onchange="onShpItemSelect()">
+            <option value="">— 選択 —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ロケーション</label>
+          <input type="text" id="shp-loccd" readonly style="color:var(--dim-green)">
+        </div>
+        <div class="form-group">
+          <label>有効在庫数</label>
+          <input type="number" id="shp-avl" readonly style="color:var(--dim-green)">
+        </div>
+        <div class="form-group">
+          <label>出庫数量 *</label>
+          <input type="number" id="shp-qty" min="1" value="1">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" onclick="submitShip()">F8=出庫確定</button>
+        <button onclick="closeModal('shp-modal')">F3=取消</button>
+      </div>
+      <div id="shp-msg" style="font-size:12px;color:var(--red);margin-top:6px"></div>
+    </div>
+  </div>
+
+  <!-- 在庫調整モーダル -->
+  <div class="modal-bg" id="adj-modal">
+    <div class="modal">
+      <div class="modal-title">
+        <span>在庫調整 INVMGR — 棚卸差異修正</span>
+        <span class="modal-close" onclick="closeModal('adj-modal')">F3=閉じる</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>商品コード *</label>
+          <select id="adj-itmcd" onchange="onAdjItemSelect()">
+            <option value="">— 選択 —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ロケーション</label>
+          <input type="text" id="adj-loccd" readonly style="color:var(--dim-green)">
+        </div>
+        <div class="form-group">
+          <label>現在在庫数</label>
+          <input type="number" id="adj-cur" readonly style="color:var(--dim-green)">
+        </div>
+        <div class="form-group">
+          <label>調整後在庫数 *</label>
+          <input type="number" id="adj-qty" min="0" value="0">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" onclick="submitAdjust()">確定</button>
+        <button onclick="closeModal('adj-modal')">F3=取消</button>
+      </div>
+      <div id="adj-msg" style="font-size:12px;color:var(--red);margin-top:6px"></div>
+    </div>
+  </div>
+
+  <!-- 入金消込モーダル -->
+  <div class="modal-bg" id="rcv-ar-modal">
+    <div class="modal">
+      <div class="modal-title">
+        <span>入金消込 ACCMGR — ARDET</span>
+        <span class="modal-close" onclick="closeModal('rcv-ar-modal')">F3=閉じる</span>
+      </div>
+      <div id="rcv-ar-info"
+        style="font-size:12px;line-height:2;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:8px">
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>入金日付 (YYYYMMDD) *</label>
+          <input type="text" id="ar-rcvdt">
+        </div>
+        <div class="form-group">
+          <label>入金方法 *</label>
+          <select id="ar-rcvmtd">
+            <option value="01">01=振込</option>
+            <option value="02">02=手形</option>
+            <option value="03">03=現金</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>今回入金額 *</label>
+          <input type="number" id="ar-nowrcv" min="1">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" onclick="submitArReceive()">F4=入金消込確定</button>
+        <button onclick="closeModal('rcv-ar-modal')">F3=取消</button>
+      </div>
+      <div id="rcv-ar-msg" style="font-size:12px;color:var(--red);margin-top:6px"></div>
+    </div>
+  </div>
+
+  <!-- 支払処理モーダル -->
+  <div class="modal-bg" id="pay-ap-modal">
+    <div class="modal">
+      <div class="modal-title">
+        <span>支払処理 ACCMGR — APDET</span>
+        <span class="modal-close" onclick="closeModal('pay-ap-modal')">F3=閉じる</span>
+      </div>
+      <div id="pay-ap-info"
+        style="font-size:12px;line-height:2;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:8px">
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>支払日付 (YYYYMMDD) *</label>
+          <input type="text" id="ap-paydt">
+        </div>
+        <div class="form-group">
+          <label>支払方法 *</label>
+          <select id="ap-paymtd">
+            <option value="01">01=振込</option>
+            <option value="02">02=手形</option>
+            <option value="03">03=現金</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>今回支払額 *</label>
+          <input type="number" id="ap-nowpay" min="1">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="primary" onclick="submitApPay()">F4=支払確定</button>
+        <button onclick="closeModal('pay-ap-modal')">F3=取消</button>
+      </div>
+      <div id="pay-ap-msg" style="font-size:12px;color:var(--red);margin-top:6px"></div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // ユーティリティ
+    // ============================================================
+    const fmt = n => Number(n).toLocaleString('ja-JP');
+    const today = () => new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
+    function setMsg(id, text, isErr = false) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = isErr ? 'err' : 'ok';
+    }
+
+    function stsLabel(s, type = 'ord') {
+      const map = {
+        '1': ['ｽﾃｰﾀｽ-1', type === 'ar' ? '未収' : type === 'ap' ? '未払' : '受注'],
+        '2': ['ｽﾃｰﾀｽ-2', type === 'ar' ? '一部入金' : type === 'ap' ? '一部支払' : '引当済'],
+        '3': ['ｽﾃｰﾀｽ-3', type === 'ar' ? '完済' : type === 'ap' ? '完済' : '出荷済'],
+        '9': ['ｽﾃｰﾀｽ-9', '取消'],
+      };
+      const [cls, label] = map[s] || ['', s];
+      return `<span class="sts sts-${s}">${label}</span>`;
+    }
+
+    async function api(method, url, body) {
+      const opt = { method, headers: { 'Content-Type': 'application/json' } };
+      if (body) opt.body = JSON.stringify(body);
+      const res = await fetch(url, opt);
+      return res.json();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // ============================================================
+    // タブ切替
+    // ============================================================
+    let currentTab = 'order';
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        const name = tab.dataset.tab;
+        currentTab = name;
+        document.getElementById('panel-' + name).classList.add('active');
+        if (name === 'order') loadOrders('all');
+        if (name === 'inventory') loadInventory();
+        if (name === 'accounting') loadAccounting();
+      });
+    });
+
+    // ============================================================
+    // 時計
+    // ============================================================
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent =
+        now.toLocaleDateString('ja-JP') + '  ' + now.toLocaleTimeString('ja-JP');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ============================================================
+    // 受発注管理
+    // ============================================================
+    let allOrders = [];
+
+    async function loadOrders(mode = 'all') {
+      const url = mode === 'open' ? '/api/orders/backlog' : '/api/orders';
+      allOrders = await api('GET', url);
+      renderOrders(allOrders);
+      renderOrdSummary(allOrders);
+      document.getElementById('ord-cnt').textContent = `${allOrders.length}件`;
+    }
+
+    function renderOrdSummary(list) {
+      const totAmt = list.reduce((s, o) => s + o.AMT, 0);
+      const openCnt = list.filter(o => o.ORDSTS === '1').length;
+      const allocCnt = list.filter(o => o.ORDSTS === '2').length;
+      const shipCnt = list.filter(o => o.ORDSTS === '3').length;
+      document.getElementById('ord-summary').innerHTML = `
+    <div class="card"><div class="card-label">受注総金額</div><div class="card-value">¥${fmt(totAmt)}</div></div>
+    <div class="card"><div class="card-label">受注中</div><div class="card-value warn">${openCnt}件</div></div>
+    <div class="card"><div class="card-label">在庫引当済</div><div class="card-value">${allocCnt}件</div></div>
+    <div class="card"><div class="card-label">出荷済</div><div class="card-value sts-3">${shipCnt}件</div></div>
+  `;
+    }
+
+    function renderOrders(list) {
+      const tbody = document.getElementById('ord-tbody');
+      tbody.innerHTML = list.map(o => `
+    <tr class="${o.ORDSTS === '9' ? 'cancelled' : ''}" onclick="showOrdDetail('${o.ORDNO}')">
+      <td>${o.ORDNO}</td>
+      <td>${fmtDate(o.ORDDT)}</td>
+      <td>${o.CUSTNM}</td>
+      <td>${o.ITMNM}</td>
+      <td class="num">${fmt(o.QTY)}</td>
+      <td class="num">¥${fmt(o.AMT)}</td>
+      <td>${fmtDate(o.DLVDT)}</td>
+      <td>${stsLabel(o.ORDSTS)}</td>
+    </tr>`).join('');
+    }
+
+    function fmtDate(d) {
+      if (!d || d.length < 8) return '';
+      return d.slice(0, 4) + '/' + d.slice(4, 6) + '/' + d.slice(6, 8);
+    }
+
+    async function filterOrders() {
+      const sts = document.getElementById('ord-sts-filter').value;
+      const list = sts ? allOrders.filter(o => o.ORDSTS === sts) : allOrders;
+      renderOrders(list);
+    }
+
+    async function showOrdDetail(ordNo) {
+      const o = allOrders.find(r => r.ORDNO === ordNo);
+      if (!o) return;
+      const stsMap = { '1': '受注', '2': '在庫引当済', '3': '出荷済', '9': '取消' };
+      document.getElementById('ord-detail-body').innerHTML = `
+    <table style="width:100%;font-size:12px;line-height:1.8">
+      <tr><td style="color:var(--dim-green);width:120px">受注番号</td><td style="color:var(--bright)">${o.ORDNO}</td>
+          <td style="color:var(--dim-green)">受注日付</td><td>${fmtDate(o.ORDDT)}</td></tr>
+      <tr><td style="color:var(--dim-green)">得意先CD</td><td>${o.CUSTCD}</td>
+          <td style="color:var(--dim-green)">得意先名</td><td>${o.CUSTNM}</td></tr>
+      <tr><td style="color:var(--dim-green)">商品コード</td><td>${o.ITMCD}</td>
+          <td style="color:var(--dim-green)">商品名</td><td>${o.ITMNM}</td></tr>
+      <tr><td style="color:var(--dim-green)">数量</td><td>${fmt(o.QTY)}</td>
+          <td style="color:var(--dim-green)">単価</td><td>¥${fmt(o.UNTPRC)}</td></tr>
+      <tr><td style="color:var(--dim-green)">受注金額</td><td style="color:var(--bright)">¥${fmt(o.AMT)}</td>
+          <td style="color:var(--dim-green)">ステータス</td><td>${stsLabel(o.ORDSTS)}</td></tr>
+      <tr><td style="color:var(--dim-green)">納品予定日</td><td>${fmtDate(o.DLVDT)}</td>
+          <td style="color:var(--dim-green)">出荷日</td><td>${fmtDate(o.SHIPDT)}</td></tr>
+      <tr><td style="color:var(--dim-green)">備考</td><td colspan="3">${o.RMRK}</td></tr>
+    </table>`;
+      const btns = document.getElementById('ord-detail-btns');
+      if (o.ORDSTS !== '9' && o.ORDSTS !== '3') {
+        btns.innerHTML = `<button class="danger" onclick="cancelOrder('${o.ORDNO}')">F9=受注取消</button>`;
+      } else {
+        btns.innerHTML = '';
+      }
+      document.getElementById('ord-detail-msg').textContent = '';
+      openModal('ord-detail-modal');
+    }
+
+    async function cancelOrder(ordNo) {
+      if (!confirm('受注を取り消しますか？')) return;
+      const res = await api('POST', `/api/orders/${ordNo}/cancel`);
+      closeModal('ord-detail-modal');
+      setMsg('msg', `受注を取り消しました: ${ordNo}`);
+      loadOrders('all');
+    }
+
+    // 受注登録モーダル
+    let invItems = [];
+    async function showOrdModal() {
+      if (!invItems.length) invItems = await api('GET', '/api/items');
+      const sel = document.getElementById('f-itmcd');
+      sel.innerHTML = '<option value="">— 選択 —</option>' +
+        invItems.map(i => `<option value="${i.ITMCD}" data-prc="${i.UNTPRC}">${i.ITMCD} ${i.ITMNM}</option>`).join('');
+      document.getElementById('f-qty').value = 1;
+      document.getElementById('f-untprc').value = '';
+      document.getElementById('f-dlvdt').value = '';
+      document.getElementById('f-rmrk').value = '';
+      document.getElementById('f-custcd').value = '';
+      document.getElementById('ord-modal-msg').textContent = '';
+      document.getElementById('ord-calc').textContent = '';
+      openModal('ord-modal');
+    }
+
+    function onItemSelect() {
+      const sel = document.getElementById('f-itmcd');
+      const opt = sel.options[sel.selectedIndex];
+      const prc = opt.dataset.prc || '';
+      document.getElementById('f-untprc').value = prc;
+      updateOrdCalc();
+    }
+
+    function updateOrdCalc() {
+      const qty = Number(document.getElementById('f-qty').value) || 0;
+      const prc = Number(document.getElementById('f-untprc').value) || 0;
+      const amt = qty * prc;
+      const tax = Math.floor(amt * 0.1);
+      document.getElementById('ord-calc').textContent =
+        `受注金額: ¥${fmt(amt)}  消費税（10%）: ¥${fmt(tax)}  税込: ¥${fmt(amt + tax)}`;
+    }
+
+    document.getElementById('f-qty').addEventListener('input', updateOrdCalc);
+
+    const custNames = {
+      C001: '株式会社山田インテリア', C002: '鈴木家具販売株式会社',
+      C003: '東京インテリアショップ', C004: '大阪リビング株式会社',
+      C005: '名古屋家具センター株式会社', C006: '福岡インテリアプロ株式会社', C007: '横浜リビングスタイル',
+    };
+
+    async function submitOrder() {
+      const custcd = document.getElementById('f-custcd').value;
+      const itmSel = document.getElementById('f-itmcd');
+      const itmcd = itmSel.value;
+      const itmnm = itmSel.options[itmSel.selectedIndex]?.text.replace(/^\S+\s/, '') || '';
+      const qty = document.getElementById('f-qty').value;
+      const untprc = document.getElementById('f-untprc').value;
+      const dlvdt = document.getElementById('f-dlvdt').value;
+      const rmrk = document.getElementById('f-rmrk').value;
+      const msgEl = document.getElementById('ord-modal-msg');
+
+      if (!custcd || !itmcd || !qty || !untprc) {
+        msgEl.textContent = '必須項目を入力してください';
+        return;
+      }
+      const res = await api('POST', '/api/orders', {
+        CUSTCD: custcd, CUSTNM: custNames[custcd] || custcd,
+        ITMCD: itmcd, ITMNM: itmnm,
+        QTY: qty, UNTPRC: untprc, DLVDT: dlvdt, RMRK: rmrk,
+      });
+      closeModal('ord-modal');
+      setMsg('msg', `受注を登録しました: ${res.ORDNO}  金額: ¥${fmt(res.AMT)}`);
+      loadOrders('all');
+    }
+
+    // ============================================================
+    // 在庫管理
+    // ============================================================
+    let allInv = [];
+
+    async function loadInventory() {
+      allInv = await api('GET', '/api/inventory');
+      renderInventory(allInv);
+      renderInvSummary(allInv);
+    }
+
+    function renderInvSummary(list) {
+      const totStk = list.reduce((s, i) => s + i.STKQTY, 0);
+      const totAlc = list.reduce((s, i) => s + i.ALCQTY, 0);
+      const totAvl = list.reduce((s, i) => s + i.AVLQTY, 0);
+      document.getElementById('inv-summary').innerHTML = `
+    <div class="card"><div class="card-label">総在庫数</div><div class="card-value">${fmt(totStk)}</div></div>
+    <div class="card"><div class="card-label">引当数</div><div class="card-value warn">${fmt(totAlc)}</div></div>
+    <div class="card"><div class="card-label">有効在庫数</div><div class="card-value">${fmt(totAvl)}</div></div>
+    <div class="card"><div class="card-label">商品数</div><div class="card-value">${list.length}品目</div></div>
+  `;
+    }
+
+    function renderInventory(list) {
+      const tbody = document.getElementById('inv-tbody');
+      tbody.innerHTML = list.map(i => {
+        const isLow = i.STKQTY <= 5;
+        const cls = isLow ? 'stk-alert' : '';
+        return `<tr>
+      <td>${i.ITMCD}</td>
+      <td>${i.ITMNM}</td>
+      <td class="loc">${i.LOCCD}</td>
+      <td class="num ${cls}">${fmt(i.STKQTY)}</td>
+      <td class="num" style="color:var(--amber)">${fmt(i.ALCQTY)}</td>
+      <td class="num ${cls}">${fmt(i.AVLQTY)}</td>
+      <td>${fmtDate(i.LSTRCVDT)}</td>
+      <td>${fmtDate(i.LSTSHPDT)}</td>
+    </tr>`;
+      }).join('');
+    }
+
+    async function loadLowStock() {
+      const list = await api('GET', '/api/inventory/low-stock');
+      renderInventory(list);
+      setMsg('msg-inv', `安全在庫割れ: ${list.length}品目`, list.length > 0);
+    }
+
+    // 入庫モーダル
+    async function showRcvModal() {
+      const invData = await api('GET', '/api/inventory');
+      const sel = document.getElementById('rcv-itmcd');
+      sel.innerHTML = '<option value="">— 選択 —</option>' +
+        invData.map(i => `<option value="${i.ITMCD}" data-loc="${i.LOCCD}" data-stk="${i.STKQTY}">${i.ITMCD} ${i.ITMNM}</option>`).join('');
+      document.getElementById('rcv-loccd').value = '';
+      document.getElementById('rcv-cur').value = '';
+      document.getElementById('rcv-qty').value = 1;
+      document.getElementById('rcv-msg').textContent = '';
+      openModal('rcv-modal');
+    }
+
+    function onRcvItemSelect() {
+      const sel = document.getElementById('rcv-itmcd');
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById('rcv-loccd').value = opt.dataset.loc || '';
+      document.getElementById('rcv-cur').value = opt.dataset.stk || '';
+    }
+
+    async function submitReceive() {
+      const itmcd = document.getElementById('rcv-itmcd').value;
+      const loccd = document.getElementById('rcv-loccd').value;
+      const qty = document.getElementById('rcv-qty').value;
+      if (!itmcd || !qty) { document.getElementById('rcv-msg').textContent = '商品と入庫数量を入力してください'; return; }
+      const res = await api('POST', '/api/inventory/receive', { ITMCD: itmcd, LOCCD: loccd, QTY: qty });
+      if (res.ok) {
+        closeModal('rcv-modal');
+        setMsg('msg-inv', `入庫処理完了: ${itmcd}  入庫数=${qty}  在庫=${res.inv.STKQTY}`);
+        loadInventory();
+      } else {
+        document.getElementById('rcv-msg').textContent = res.msg;
+      }
+    }
+
+    // 出庫モーダル
+    async function showShpModal() {
+      const invData = await api('GET', '/api/inventory');
+      const sel = document.getElementById('shp-itmcd');
+      sel.innerHTML = '<option value="">— 選択 —</option>' +
+        invData.map(i => `<option value="${i.ITMCD}" data-loc="${i.LOCCD}" data-avl="${i.AVLQTY}">${i.ITMCD} ${i.ITMNM}</option>`).join('');
+      document.getElementById('shp-loccd').value = '';
+      document.getElementById('shp-avl').value = '';
+      document.getElementById('shp-qty').value = 1;
+      document.getElementById('shp-msg').textContent = '';
+      openModal('shp-modal');
+    }
+
+    function onShpItemSelect() {
+      const sel = document.getElementById('shp-itmcd');
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById('shp-loccd').value = opt.dataset.loc || '';
+      document.getElementById('shp-avl').value = opt.dataset.avl || '';
+    }
+
+    async function submitShip() {
+      const itmcd = document.getElementById('shp-itmcd').value;
+      const loccd = document.getElementById('shp-loccd').value;
+      const qty = document.getElementById('shp-qty').value;
+      if (!itmcd || !qty) { document.getElementById('shp-msg').textContent = '商品と出庫数量を入力してください'; return; }
+      const res = await api('POST', '/api/inventory/ship', { ITMCD: itmcd, LOCCD: loccd, QTY: qty });
+      if (res.ok) {
+        closeModal('shp-modal');
+        setMsg('msg-inv', `出庫処理完了: ${itmcd}  出庫数=${qty}  有効在庫=${res.inv.AVLQTY}`);
+        loadInventory();
+      } else {
+        document.getElementById('shp-msg').textContent = res.msg;
+      }
+    }
+
+    // 在庫調整モーダル
+    async function showAdjModal() {
+      const invData = await api('GET', '/api/inventory');
+      const sel = document.getElementById('adj-itmcd');
+      sel.innerHTML = '<option value="">— 選択 —</option>' +
+        invData.map(i => `<option value="${i.ITMCD}" data-loc="${i.LOCCD}" data-stk="${i.STKQTY}">${i.ITMCD} ${i.ITMNM}</option>`).join('');
+      document.getElementById('adj-msg').textContent = '';
+      openModal('adj-modal');
+    }
+
+    function onAdjItemSelect() {
+      const sel = document.getElementById('adj-itmcd');
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById('adj-loccd').value = opt.dataset.loc || '';
+      document.getElementById('adj-cur').value = opt.dataset.stk || '';
+      document.getElementById('adj-qty').value = opt.dataset.stk || 0;
+    }
+
+    async function submitAdjust() {
+      const itmcd = document.getElementById('adj-itmcd').value;
+      const loccd = document.getElementById('adj-loccd').value;
+      const qty = document.getElementById('adj-qty').value;
+      if (!itmcd) { document.getElementById('adj-msg').textContent = '商品を選択してください'; return; }
+      const res = await api('POST', '/api/inventory/adjust', { ITMCD: itmcd, LOCCD: loccd, STKQTY: qty });
+      if (res.ok) {
+        closeModal('adj-modal');
+        setMsg('msg-inv', `在庫調整完了: ${itmcd}  調整後在庫=${res.inv.STKQTY}`);
+        loadInventory();
+      } else {
+        document.getElementById('adj-msg').textContent = res.msg;
+      }
+    }
+
+    // ============================================================
+    // 会計管理
+    // ============================================================
+    async function loadAccounting() {
+      const [arList, apList, arSum, apSum] = await Promise.all([
+        api('GET', '/api/ar'),
+        api('GET', '/api/ap'),
+        api('GET', '/api/ar/summary'),
+        api('GET', '/api/ap/summary'),
+      ]);
+      renderAccSummary(arSum, apSum);
+      renderArTable(arList);
+      renderApTable(apList);
+    }
+
+    function renderAccSummary(ar, ap) {
+      document.getElementById('acc-summary').innerHTML = `
+    <div class="card"><div class="card-label">売掛残高</div><div class="card-value ${ar.totBal > 0 ? 'alert' : ''}">¥${fmt(ar.totBal)}</div></div>
+    <div class="card"><div class="card-label">売掛請求総額</div><div class="card-value">¥${fmt(ar.totInv)}</div></div>
+    <div class="card"><div class="card-label">買掛残高</div><div class="card-value ${ap.totBal > 0 ? 'warn' : ''}">¥${fmt(ap.totBal)}</div></div>
+    <div class="card"><div class="card-label">買掛仕入総額</div><div class="card-value">¥${fmt(ap.totPo)}</div></div>
+  `;
+    }
+
+    function renderArTable(list) {
+      const tbody = document.getElementById('ar-tbody');
+      tbody.innerHTML = list.map(r => `
+    <tr onclick="showArDetail('${r.INVNO}')">
+      <td>${r.INVNO}</td>
+      <td>${fmtDate(r.INVDT)}</td>
+      <td>${fmtDate(r.DUEDT)}</td>
+      <td>${r.CUSTNM}</td>
+      <td>${r.ITMNM}</td>
+      <td class="num">¥${fmt(r.INVAMT)}</td>
+      <td class="num">¥${fmt(r.RCVAMT)}</td>
+      <td class="num ${r.BALAMT > 0 ? 'alert' : ''}">¥${fmt(r.BALAMT)}</td>
+      <td>${stsLabel(r.ARSTS, 'ar')}</td>
+    </tr>`).join('');
+    }
+
+    function renderApTable(list) {
+      const tbody = document.getElementById('ap-tbody');
+      tbody.innerHTML = list.map(r => `
+    <tr onclick="showApDetail('${r.PONO}')">
+      <td>${r.PONO}</td>
+      <td>${fmtDate(r.PODT)}</td>
+      <td>${fmtDate(r.PAYDT)}</td>
+      <td>${r.SUPNM}</td>
+      <td>${r.ITMNM}</td>
+      <td class="num">¥${fmt(r.POAMT)}</td>
+      <td class="num">¥${fmt(r.PAYAMT)}</td>
+      <td class="num ${r.BALAMT > 0 ? 'warn' : ''}">¥${fmt(r.BALAMT)}</td>
+      <td>${stsLabel(r.APSTS, 'ap')}</td>
+    </tr>`).join('');
+    }
+
+    let currentArRecord = null;
+    async function showArDetail(invNo) {
+      const list = await api('GET', '/api/ar');
+      currentArRecord = list.find(r => r.INVNO === invNo);
+      if (!currentArRecord || currentArRecord.ARSTS === '3') return;
+      const r = currentArRecord;
+      document.getElementById('rcv-ar-info').innerHTML = `
+    <b style="color:var(--bright)">請求番号：${r.INVNO}</b><br>
+    得意先：${r.CUSTNM}<br>
+    商品名：${r.ITMNM}　数量：${fmt(r.QTY)}<br>
+    請求金額：¥${fmt(r.INVAMT)}　消費税：¥${fmt(r.TAXAMT)}<br>
+    入金済：¥${fmt(r.RCVAMT)}　<span style="color:var(--red)">未収残高：¥${fmt(r.BALAMT)}</span>
+  `;
+      document.getElementById('ar-rcvdt').value = today();
+      document.getElementById('ar-nowrcv').value = r.BALAMT;
+      document.getElementById('rcv-ar-msg').textContent = '';
+      openModal('rcv-ar-modal');
+    }
+
+    async function submitArReceive() {
+      if (!currentArRecord) return;
+      const rcvdt = document.getElementById('ar-rcvdt').value;
+      const rcvmtd = document.getElementById('ar-rcvmtd').value;
+      const nowrcv = document.getElementById('ar-nowrcv').value;
+      const msgEl = document.getElementById('rcv-ar-msg');
+      if (!rcvdt || !nowrcv) { msgEl.textContent = '入金日付と入金額を入力してください'; return; }
+      const res = await api('POST', '/api/ar/receive', {
+        INVNO: currentArRecord.INVNO, RCVAMT: nowrcv, RCVDT: rcvdt, RCVMTD: rcvmtd,
+      });
+      if (res.ok) {
+        closeModal('rcv-ar-modal');
+        setMsg('msg-acc', `入金消込完了: ${currentArRecord.INVNO}  残高=¥${fmt(res.rec.BALAMT)}`);
+        loadAccounting();
+      } else {
+        msgEl.textContent = res.msg;
+      }
+    }
+
+    let currentApRecord = null;
+    async function showApDetail(poNo) {
+      const list = await api('GET', '/api/ap');
+      currentApRecord = list.find(r => r.PONO === poNo);
+      if (!currentApRecord || currentApRecord.APSTS === '3') return;
+      const r = currentApRecord;
+      document.getElementById('pay-ap-info').innerHTML = `
+    <b style="color:var(--bright)">仕入番号：${r.PONO}</b><br>
+    仕入先：${r.SUPNM}<br>
+    商品名：${r.ITMNM}　数量：${fmt(r.QTY)}<br>
+    仕入金額：¥${fmt(r.POAMT)}　消費税：¥${fmt(r.TAXAMT)}<br>
+    支払済：¥${fmt(r.PAYAMT)}　<span style="color:var(--amber)">未払残高：¥${fmt(r.BALAMT)}</span>
+  `;
+      document.getElementById('ap-paydt').value = today();
+      document.getElementById('ap-nowpay').value = r.BALAMT;
+      document.getElementById('pay-ap-msg').textContent = '';
+      openModal('pay-ap-modal');
+    }
+
+    async function submitApPay() {
+      if (!currentApRecord) return;
+      const paydt = document.getElementById('ap-paydt').value;
+      const paymtd = document.getElementById('ap-paymtd').value;
+      const nowpay = document.getElementById('ap-nowpay').value;
+      const msgEl = document.getElementById('pay-ap-msg');
+      if (!paydt || !nowpay) { msgEl.textContent = '支払日付と支払額を入力してください'; return; }
+      const res = await api('POST', '/api/ap/pay', {
+        PONO: currentApRecord.PONO, PAYAMT: nowpay, PAYDT: paydt, PAYMTD: paymtd,
+      });
+      if (res.ok) {
+        closeModal('pay-ap-modal');
+        setMsg('msg-acc', `支払処理完了: ${currentApRecord.PONO}  残高=¥${fmt(res.rec.BALAMT)}`);
+        loadAccounting();
+      } else {
+        msgEl.textContent = res.msg;
+      }
+    }
+
+    // ============================================================
+    // 初期ロード
+    // ============================================================
+    loadOrders('all');
+  </script>
+</body>
+
+</html>

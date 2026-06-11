@@ -1,0 +1,49 @@
+     A* =================================================================
+     A* ファイル名：ORDPF
+     A* 機　　能：受注物理ファイル
+     A* キー　　：受注番号（ORDNO）
+     A* =================================================================
+     A                                      UNIQUE
+     A          R ORDREC                    TEXT('受注レコード')
+     A*
+     A* --- 基本情報 ---
+     A            ORDNO         10A         TEXT('受注番号')
+     A                                      COLHDG('受注番号')
+     A            ORDDT          8A         TEXT('受注日付YYYYMMDD')
+     A                                      COLHDG('受注日付')
+     A            CUSTCD        10A         TEXT('得意先コード')
+     A                                      COLHDG('得意先' 'コード')
+     A            CUSTNM        40A         TEXT('得意先名')
+     A                                      COLHDG('得意先名')
+     A*
+     A* --- 商品情報 ---
+     A            ITMCD         10A         TEXT('商品コード')
+     A                                      COLHDG('商品コード')
+     A            ITMNM         40A         TEXT('商品名')
+     A                                      COLHDG('商品名')
+     A            QTY            7P 0       TEXT('受注数量')
+     A                                      COLHDG('受注数量')
+     A            UNTPRC         9P 2       TEXT('単価')
+     A                                      COLHDG('単価')
+     A            AMT           11P 2       TEXT('受注金額')
+     A                                      COLHDG('受注金額')
+     A*
+     A* --- ステータス ---
+     A            ORDSTS         1A         TEXT('受注ステータス 1=受注 2=引当 3=出荷 9=取消')
+     A                                      COLHDG('ステータス')
+     A            DLVDT          8A         TEXT('納品予定日YYYYMMDD')
+     A                                      COLHDG('納品予定日')
+     A            SHIPDT         8A         TEXT('出荷日YYYYMMDD')
+     A                                      COLHDG('出荷日')
+     A*
+     A* --- 備考・更新情報 ---
+     A            RMRK         100A         TEXT('備考')
+     A                                      COLHDG('備考')
+     A            UPDDT          8A         TEXT('最終更新日YYYYMMDD')
+     A                                      COLHDG('更新日')
+     A            UPDTM          6A         TEXT('最終更新時刻HHMMSS')
+     A                                      COLHDG('更新時刻')
+     A            UPDUID        10A         TEXT('更新ユーザーID')
+     A                                      COLHDG('更新者')
+     A*
+     A          K ORDNO

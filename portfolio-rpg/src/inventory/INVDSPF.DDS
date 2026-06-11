@@ -1,0 +1,140 @@
+     A* =================================================================
+     A* ファイル名：INVDSPF
+     A* 機　　能：在庫管理画面ファイル
+     A* 画面サイズ：24行 × 80桁
+     A* =================================================================
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      PRINT
+     A                                      CA03(03 'F3=終了')
+     A*
+     A* =================================================================
+     A* フォーマット：INVMNU（在庫照会メニュー画面）
+     A* =================================================================
+     A          R INVMNU
+     A                                      CA06(06 'F6=商品登録')
+     A                                      CA07(07 'F7=入庫処理')
+     A                                      CA08(08 'F8=出庫処理')
+     A*
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 50'物流在庫管理'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A                                      3  2'商品コード:'
+     A            SRITMCD       10A  B  3 13DSPATR(UL)
+     A                                      3 28'カテゴリ:'
+     A            SRCATCD        4A  B  3 37DSPATR(UL)
+     A                                      3 45'ロケーション:'
+     A            SRLOCCD       10A  B  3 58DSPATR(UL)
+     A*
+     A                                      5  2'商品コード  商品名                     +
+     A                                         在庫数量  引当数量  有効在庫  ﾛｹｰｼｮﾝ'
+     A                                      DSPATR(HI)
+     A                                      6  2'----------+------------------------------+
+     A                                         ---------+---------+---------+----------'
+     A*
+     A                                      23  2'F3=終了  F6=商品登録  F7=入庫  +
+     A                                         F8=出庫  Enter=検索'
+     A                                      DSPATR(HI)
+     A            MSGINV        79A  O 24  2COLOR(RED)
+     A*
+     A* =================================================================
+     A* フォーマット：ITMDET（商品マスタ明細画面）
+     A* =================================================================
+     A          R ITMDET
+     A                                      CF04(04 'F4=確定登録')
+     A                                      CA09(09 'F9=廃番処理')
+     A*
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 55'商品マスタ'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A                                      3  2'商品コード'
+     A                                      DSPATR(HI)
+     A            ITMCD         10A  B  3 13DSPATR(UL)
+     A*
+     A                                      4  2'商品名'
+     A                                      DSPATR(HI)
+     A            ITMNM         40A  B  4  9
+     A                                      5  2'商品名(ｶﾅ)'
+     A                                      DSPATR(HI)
+     A            ITMKN         40A  B  5 12
+     A*
+     A                                      7  2'カテゴリCD'
+     A                                      DSPATR(HI)
+     A            CATCD          4A  B  7 13DSPATR(UL)
+     A                                      7 20'カテゴリ名'
+     A                                      DSPATR(HI)
+     A            CATNM         20A  B  7 31
+     A*
+     A                                      9  2'販売単価'
+     A                                      DSPATR(HI)
+     A            UNTPRC         9P 2B  9 11EDTCDE(1)
+     A                                      9 26'仕入単価'
+     A                                      DSPATR(HI)
+     A            CPRC           9P 2B  9 35EDTCDE(1)
+     A*
+     A                                      11  2'安全在庫'
+     A                                      DSPATR(HI)
+     A            SAFSTK         7P 0B 11 11EDTCDE(1)
+     A                                      11 22'発注点'
+     A                                      DSPATR(HI)
+     A            ORDPT          7P 0B 11 29EDTCDE(1)
+     A                                      11 40'発注ロット'
+     A                                      DSPATR(HI)
+     A            ORDQTY         7P 0B 11 51EDTCDE(1)
+     A*
+     A                                      13  2'仕入先CD'
+     A                                      DSPATR(HI)
+     A            SUPCD         10A  B 13 11DSPATR(UL)
+     A                                      13 25'仕入先名'
+     A                                      DSPATR(HI)
+     A            SUPNM         40A  B 13 34
+     A*
+     A                                      23  2'F3=終了  F4=確定登録  F9=廃番処理'
+     A                                      DSPATR(HI)
+     A            MSGITM        79A  O 24  2COLOR(RED)
+     A*
+     A* =================================================================
+     A* フォーマット：NYUKO（入庫処理画面）
+     A* =================================================================
+     A          R NYUKO
+     A                                      CF04(04 'F4=入庫確定')
+     A*
+     A                                      1  2'インテリア商社基幹システム'
+     A                                      DSPATR(HI)
+     A                                      1 57'入庫処理'
+     A                                      DSPATR(HI)
+     A                                      1 65DATE EDTCDE(Y)
+     A*
+     A                                      3  2'商品コード'
+     A                                      DSPATR(HI)
+     A            NITMCD        10A  B  3 13DSPATR(UL)
+     A                                      3 27'ロケーション'
+     A                                      DSPATR(HI)
+     A            NLOCCD        10A  B  3 40DSPATR(UL)
+     A*
+     A                                      5  2'商品名'
+     A                                      DSPATR(HI)
+     A            NITMNM        40A  O  5  9DSPATR(HI)
+     A*
+     A                                      7  2'現在在庫数'
+     A                                      DSPATR(HI)
+     A            NSTKQTY        9P 0O  7 13EDTCDE(1)
+     A                                      DSPATR(HI)
+     A*
+     A                                      9  2'入庫数量'
+     A                                      DSPATR(HI)
+     A            NRCVQTY        9P 0B  9 11EDTCDE(1)
+     A*
+     A                                      11  2'入庫後在庫'
+     A                                      DSPATR(HI)
+     A            NAFTRQTY       9P 0O 11 13EDTCDE(1)
+     A                                      DSPATR(HI)
+     A*
+     A                                      23  2'F3=終了  F4=入庫確定  Enter=商品照会'
+     A                                      DSPATR(HI)
+     A            MSGNYU        79A  O 24  2COLOR(RED)
